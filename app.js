@@ -2,18 +2,9 @@ class CustomerIntelligenceDashboard {
     constructor() {
         this.activeSection = 'dashboard';
         this.initializeEventListeners();
+        this.initializeChatInterface(); // NEW: Initialize chat interface
         this.loadInitialContent();
     }
-}
-
-// Create global app instance
-const app = new CustomerIntelligenceDashboard();
-
-// Ensure DOM is fully loaded before initializing
-document.addEventListener('DOMContentLoaded', () => {
-    // The app is already initialized through the global instance
-    // Any additional initialization can go here
-});
 
     initializeEventListeners() {
         // Hamburger Menu Toggle
@@ -36,6 +27,93 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // NEW METHOD START - Add this entire method
+    initializeChatInterface() {
+        // Get chat interface elements
+        const chatInterface = document.getElementById('customer-chat-interface');
+        const minimizeBtn = document.getElementById('chat-minimize-btn');
+
+        if (!chatInterface) return; // Exit if chat interface doesn't exist
+
+        // 1. Hide chat on load
+        chatInterface.style.display = 'none';
+
+        // 2. Create chat toggle button
+        const toggleBtn = document.createElement('button');
+        toggleBtn.id = 'chat-toggle-btn';
+        toggleBtn.innerHTML = `
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+            </svg>
+        `;
+        toggleBtn.className = 'fixed bottom-4 right-4 bg-blue-600 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg z-50 hover:bg-blue-500 transition';
+        document.body.appendChild(toggleBtn);
+
+        // 3. Make chat draggable
+        this.makeChatDraggable(chatInterface);
+
+        // 4. Event listeners
+        toggleBtn.addEventListener('click', () => {
+            if (chatInterface.style.display === 'none') {
+                chatInterface.style.display = 'block';
+            } else {
+                chatInterface.style.display = 'none';
+            }
+        });
+
+        if (minimizeBtn) {
+            minimizeBtn.addEventListener('click', () => {
+                chatInterface.style.display = 'none';
+            });
+        }
+    }
+    // NEW METHOD END
+
+    // NEW METHOD START - Add this entire method
+    makeChatDraggable(element) {
+        const header = element.querySelector('.chat-header');
+        if (!header) return;
+
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        header.classList.add('cursor-move');
+
+        header.addEventListener('mousedown', (e) => {
+            isDragging = true;
+
+            // When drag starts, convert from fixed to absolute positioning
+            if (element.classList.contains('fixed')) {
+                const rect = element.getBoundingClientRect();
+                element.style.top = rect.top + 'px';
+                element.style.left = rect.left + 'px';
+                element.classList.remove('fixed', 'bottom-4', 'right-4');
+                element.classList.add('absolute');
+            }
+
+            // Calculate offset for drag position
+            const rect = element.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            element.style.top = (e.clientY - offsetY) + 'px';
+            element.style.left = (e.clientX - offsetX) + 'px';
+
+            e.preventDefault();
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    }
+    // NEW METHOD END
 
     loadInitialContent() {
         this.loadSection('dashboard');
@@ -104,7 +182,93 @@ document.addEventListener('DOMContentLoaded', () => {
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                             </svg>
+                        </div>
                     </div>
+
+                    <!-- Steadfast Customers -->
+                    <div class="rounded-xl p-4 cursor-pointer transform transition hover:scale-105 hover:shadow-lg bg-gradient-to-br from-blue-700 to-blue-900">
+                        <h3 class="text-xl font-semibold">Steadfast Customers</h3>
+                        <div class="mt-2 text-4xl font-bold">1,673</div>
+                        <div class="text-sm opacity-80 mt-1">55.28% of customer base</div>
+                        <div class="mt-3 flex items-end justify-between">
+                            <div class="text-xs opacity-70">41.39% of revenue</div>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- At-Risk Customers -->
+                    <div class="rounded-xl p-4 cursor-pointer transform transition hover:scale-105 hover:shadow-lg bg-gradient-to-br from-yellow-600 to-yellow-800">
+                        <h3 class="text-xl font-semibold">At-Risk Customers</h3>
+                        <div class="mt-2 text-4xl font-bold">389</div>
+                        <div class="text-sm opacity-80 mt-1">12.82% of customer base</div>
+                        <div class="mt-3 flex items-end justify-between">
+                            <div class="text-xs opacity-70">7.75% of revenue</div>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Inactive Customers -->
+                    <div class="rounded-xl p-4 cursor-pointer transform transition hover:scale-105 hover:shadow-lg bg-gradient-to-br from-red-700 to-red-900">
+                        <h3 class="text-xl font-semibold">Inactive Customers</h3>
+                        <div class="mt-2 text-4xl font-bold">440</div>
+                        <div class="text-sm opacity-80 mt-1">14.56% of customer base</div>
+                        <div class="mt-3 flex items-end justify-between">
+                            <div class="text-xs opacity-70">6.17% of revenue</div>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Insights -->
+                <div class="bg-black bg-opacity-30 rounded-xl p-6 mt-6">
+                    <h3 class="text-2xl font-semibold mb-4">Key Insights</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-purple-500 rounded-full w-8 h-8 flex items-center justify-center mt-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <p class="font-medium">
+                                    Your 537 Elite Customers are your VIP rock stars—they make up 17.34% of your customer base but are ringing in a massive 44.68% of your sales!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center mt-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <p class="font-medium">
+                                    With a bit of extra love and messaging targeted to the Steadfast folks, you could easily see 82 more join the Elite ranks. That's your ticket to hitting that sweet 20% Elite Customer goal.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 bg-yellow-500 rounded-full w-8 h-8 flex items-center justify-center mt-1">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <p class="font-medium">
+                                    Your At-Risk segment (12.82%) needs immediate attention, especially the 359 Existing Customers in Last Chance status.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     }
@@ -299,88 +463,4 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
     }
-
-                <!-- Key Insights -->
-                <div class="bg-black bg-opacity-30 rounded-xl p-6 mt-6">
-                    <h3 class="text-2xl font-semibold mb-4">Key Insights</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-purple-500 rounded-full w-8 h-8 flex items-center justify-center mt-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-4 flex-1">
-                                <p class="font-medium">
-                                    Your 537 Elite Customers are your VIP rock stars—they make up 17.34% of your customer base but are ringing in a massive 44.68% of your sales!
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center mt-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-4 flex-1">
-                                <p class="font-medium">
-                                    With a bit of extra love and messaging targeted to the Steadfast folks, you could easily see 82 more join the Elite ranks. That's your ticket to hitting that sweet 20% Elite Customer goal.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start">
-                            <div class="flex-shrink-0 bg-yellow-500 rounded-full w-8 h-8 flex items-center justify-center mt-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                                </svg>
-                            </div>
-                            <div class="ml-4 flex-1">
-                                <p class="font-medium">
-                                    Your At-Risk segment (12.82%) needs immediate attention, especially the 359 Existing Customers in Last Chance status.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    </div>
-
-                    <!-- Steadfast Customers -->
-                    <div class="rounded-xl p-4 cursor-pointer transform transition hover:scale-105 hover:shadow-lg bg-gradient-to-br from-blue-700 to-blue-900">
-                        <h3 class="text-xl font-semibold">Steadfast Customers</h3>
-                        <div class="mt-2 text-4xl font-bold">1,673</div>
-                        <div class="text-sm opacity-80 mt-1">55.28% of customer base</div>
-                        <div class="mt-3 flex items-end justify-between">
-                            <div class="text-xs opacity-70">41.39% of revenue</div>
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- At-Risk Customers -->
-                    <div class="rounded-xl p-4 cursor-pointer transform transition hover:scale-105 hover:shadow-lg bg-gradient-to-br from-yellow-600 to-yellow-800">
-                        <h3 class="text-xl font-semibold">At-Risk Customers</h3>
-                        <div class="mt-2 text-4xl font-bold">389</div>
-                        <div class="text-sm opacity-80 mt-1">12.82% of customer base</div>
-                        <div class="mt-3 flex items-end justify-between">
-                            <div class="text-xs opacity-70">7.75% of revenue</div>
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Inactive Customers -->
-                    <div class="rounded-xl p-4 cursor-pointer transform transition hover:scale-105 hover:shadow-lg bg-gradient-to-br from-red-700 to-red-900">
-                        <h3 class="text-xl font-semibold">Inactive Customers</h3>
-                        <div class="mt-2 text-4xl font-bold">440</div>
-                        <div class="text-sm opacity-80 mt-1">14.56% of customer base</div>
-                        <div class="mt-3 flex items-end justify-between">
-                            <div class="text-xs opacity-70">6.17% of revenue</div>
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                            </svg>
-                        </div>
-                    </div>
+}
