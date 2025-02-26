@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    background: linear-gradient(to bottom right, #1f2937, #111827);
+    color: white;
+    min-height: 100vh;
+}
+
+.bg-gradient-to-br {
+    background: linear-gradient(to bottom right, #1f2937, #111827);
+}
+
+/* Navigation Menu */
+#navigation-menu {
+    background-color: rgba(31, 41, 55, 0.95);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Show sidebar when menu is open */
+#app.menu-open #navigation-menu {
+    transform: translateX(0);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #navigation-menu {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .grid-cols-4 {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Transition Effects */
+.transition {
+    transition-property: background-color, transform, box-shadow;
+    transition-duration: 0.2s;
+}
+
+.hover\:scale-105:hover {
+    transform: scale(1.05);
+}
+
+/* Chat Interface */
+#customer-chat-interface {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    width: 400px;
+    max-height: 600px;
+    background-color: rgba(31, 41, 55, 0.95);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+}
+
+#customer-chat-interface.minimized #chat-messages,
+#customer-chat-interface.minimized .chat-input {
+    display: none;
+}
+
+.message.text-right .ml-auto {
+    margin-left: auto;
+}
+
+/* Utility Classes */
+.bg-black.bg-opacity-30 {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.bg-gradient-to-br.from-purple-700.to-purple-900 {
+    background: linear-gradient(to bottom right, #7e22ce, #581c87);
+}
+
+.bg-gradient-to-br.from-blue-700.to-blue-900 {
+    background: linear-gradient(to bottom right, #1d4ed8, #1e3a8a);
+}
+
+.bg-gradient-to-br.from-yellow-600.to-yellow-800 {
+    background: linear-gradient(to bottom right, #ca8a04, #854d0e);
+}
+
+.bg-gradient-to-br.from-red-700.to-red-900 {
+    background: linear-gradient(to bottom right, #b91c1c, #7f1d1d);
+}
+
+/* Additional custom styling */
+.rounded-xl {
+    border-radius: 0.75rem;
+}
+
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Animation for hover effects */
+.hover\:shadow-lg:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
