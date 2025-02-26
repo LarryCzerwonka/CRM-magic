@@ -1,25 +1,30 @@
 class CustomerChatInterface {
-    constructor() {
-        this.chatContainer = document.getElementById('customer-chat-interface');
-        this.chatMessages = document.getElementById('chat-messages');
-        this.chatInput = document.getElementById('chat-input');
-        this.chatForm = document.getElementById('chat-message-form');
-        this.minimizeBtn = document.getElementById('chat-minimize-btn');
-        this.isMinimized = false;
+  constructor() {
+      this.chatContainer = document.getElementById('customer-chat-interface');
+      this.chatMessages = document.getElementById('chat-messages');
+      this.chatInput = document.getElementById('chat-input');
+      this.chatForm = document.getElementById('chat-message-form');
+      this.minimizeBtn = document.getElementById('chat-minimize-btn');
+      this.chatToggleBtn = document.getElementById('chat-toggle-btn');
+      this.isMinimized = false;
 
-        this.bindEvents();
-    }
+      this.bindEvents();
+  }
 
-    bindEvents() {
-        this.chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleUserMessage();
-        });
+  bindEvents() {
+      this.chatForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          this.handleUserMessage();
+      });
 
-        this.minimizeBtn.addEventListener('click', () => {
-            this.toggleChatMinimize();
-        });
-    }
+      this.minimizeBtn.addEventListener('click', () => {
+          this.toggleChatMinimize();
+      });
+
+      this.chatToggleBtn.addEventListener('click', () => {
+          this.toggleChatMinimize();
+      });
+  }
 
     handleUserMessage() {
         const message = this.chatInput.value.trim();
